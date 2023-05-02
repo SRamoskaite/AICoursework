@@ -568,14 +568,15 @@ end
 ;; Immune turtles don't get sick.
 to infect ;; turtle procedure
 
-  ask other turtles in-radius 4 with [ not sick? and not immune? ]
-    [ ;;if random-float 100 < infectiousness
-      ;;[
-        ;;get-sick
+  ask other turtles in-radius 4 with [ not sick? and not immune? ] [
 
-        get-infected
-      ;;]
-     ;; show max-one-of turtles [distance myself]
+     if (random-float 100 < infectiousness )
+
+      [ get-infected
+        get-sick ]
+
+    ;; otherwise does not get infected
+
   ]
 
 end
@@ -583,7 +584,7 @@ end
 to get-infected
 ;;example
    ;; face mask = 0.1 -> the risk is lower because you wear a face mask
-   ;; disinfection = 1.0 -> high risk because it is not disinfected
+   ;; disinfection = 1.0 -> low risk because it is disinfected
    ;; vaccine = 2 -> 2nd dose
    ;; minexposure = ((0.1)*(0.7) + (1)(0.3))*(1-(0.4))
    ;; minexposure = ((0.1)*(0.7) + (1)(0.3))*(0.6)) ->>>>> 0.2222
@@ -593,14 +594,17 @@ to get-infected
 
 end
 
+
 ;; Once the turtle has been sick long enough, it
 ;; either recovers (and becomes immune) or it dies.
 to recover-or-die ;; turtle procedure
   ;;ifelse old? [ set my-chance-recover chance-recover-elders ] [ set my-chance-recover chance-recover ]
+  let chanceofrecovery random 100
   if sick-time > duration *  480                        ;; If the turtle has survived past the virus' duration, then
-    [ ifelse random-float 1000 <= 2   ;; mortalidad del 0.2%
+    [ ifelse chanceofrecovery > 10 ;; mortality chance
+       [ become-immune ]
       [ die set deaths deaths + 1 ]
-      [ become-immune ] ]
+  ]
 end
 
 to-report immune?
@@ -647,25 +651,10 @@ duration
 duration
 0.0
 99.0
-42.0
+30.0
 1.0
 1
 days
-HORIZONTAL
-
-SLIDER
-32
-376
-226
-409
-chance-recover
-chance-recover
-0.0
-100.0
-100.0
-1.0
-1
-%
 HORIZONTAL
 
 SLIDER
@@ -746,7 +735,7 @@ initial-number-people
 initial-number-people
 2
 12
-6.0
+5.0
 1
 1
 tenants
@@ -807,28 +796,10 @@ GCU Team A-11 2022/23 Covid-19 virus simulator
 1
 
 PLOT
-285
-512
-485
-662
-Sick curve
-days
-people
-0.0
-10.0
-0.0
-10.0
-true
-true
-"" ""
-PENS
-"sick" 1.0 0 -2674135 true "" "plot count turtles with [ sick? ] "
-
-PLOT
-921
-343
-1313
-493
+797
+345
+1189
+495
 Infections per day
 minutes elapsed
 infections per day
@@ -873,7 +844,7 @@ use_mask
 use_mask
 0
 100
-21.0
+50.0
 1
 1
 NIL
@@ -888,32 +859,32 @@ use_disinfectant
 use_disinfectant
 0
 100
-79.0
+50.0
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-43
-431
-220
-464
+35
+384
+212
+417
 advance_vaccination
 advance_vaccination
 0
-5
-5.0
+100
+25.0
 1
 1
 %
 HORIZONTAL
 
 PLOT
-595
-531
-970
-681
+391
+533
+766
+683
 Vaccinations
 NIL
 NIL
@@ -930,24 +901,24 @@ PENS
 "3rd dose" 1.0 0 -955883 true "" "plot count turtles with [ vaccinedoses = 3]"
 
 SWITCH
-72
-496
-199
-529
+58
+432
+185
+465
 vaccination
 vaccination
-1
+0
 1
 -1000
 
 PLOT
-1063
-538
-1263
-688
+813
+536
+1013
+686
 Deaths
-NIL
-NIL
+time
+deaths
 0.0
 10.0
 0.0
@@ -956,7 +927,7 @@ true
 true
 "" ""
 PENS
-"deaths" 1.0 0 -16777216 true "" "plot deaths"
+"deaths" 1.0 0 -16777216 true "" "plot (initial-number-people - count turtles)"
 
 @#$#@#$#@
 ## WHAT IS IT?
