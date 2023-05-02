@@ -1,4 +1,4 @@
-# AICoursework
+# AI Coursework Submission
 
 Team A11 
 	
@@ -8,3 +8,5 @@ Team A11
 | Simona Ramoskaite | S1827254 | sramos201@caledonian.ac.uk  |
 | Clifford Amhanre | S1830571  | camhan200@caledonian.ac.uk |
 | Abdalwahab Al Balili | S1919518 | aalbal210@caledonian.ac.uk 
+
+Glasgow Caledonian University, 02/05/2023
